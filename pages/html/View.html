@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="./jquery.min_wev8.js"></script>
+
+<script language="javascript" type="text/javascript" src="./swfobject_wev8.js"></script>
+
+
+<!-- js 整合到 init_wev8.js -->
+<script type="text/javascript" src="../js/jquery.table_wev8.js"></script>
+<script language="javascript" type="text/javascript" src="../js/init_wev8.js"></script>
+<script language="javascript" src="../js/wbusb_wev8.js"></script>
+<script type="text/javascript" src="../js/jquery.client_wev8.js"></script>
+<script type="text/javascript" src="../js/jquery.jNice_wev8.js"></script>
+<script type="text/javascript" src="../js/jquery.autocomplete_wev8.js"></script>
+<script type="text/javascript" src="../js/browser_wev8.js"></script>
+<script language="javascript" src="../js/zDialog_wev8.js"></script>
+<script type="text/javascript" src="../js/hoverBtn_wev8.js"></script>
+<script type="text/javascript" src="../js/weaver_lang_7_wev8.js"></script>
+
+<!-- init.css, 所有css文件都在此文件中引入 -->
+<link rel="stylesheet" href="../css/init_wev8.css" type="text/css">
+
+
+
+<script language="javascript">
+window["_jsessionid"] = "abcGIXfl4EmsDgcNxyLaw";
+function check_conn() {
+	return confirm('网络故障或其它原因导致您连接不上服务器，请复制下重要信息稍候再提交！\r\n\r\n按【确定】继续,按【取消】停留在本页!');
+}
+
+function _onViewLog(operateitem,sqlwhere,id){
+	if(!sqlwhere)sqlwhere = "";
+	var dialog = new window.top.Dialog();
+	dialog.currentWindow = window;
+	dialog.Title = "查看日志";
+	var url = "/docs/tabs/DocCommonTab.jsp?_fromURL=3&operateitem="+operateitem+"&sqlwhere="+sqlwhere;
+	if(id){
+		url = "/docs/tabs/DocCommonTab.jsp?_fromURL=3&relatedid="+id+"&operateitem="+operateitem+"&sqlwhere="+sqlwhere;
+		if(operateitem==418||operateitem==419||operateitem==420){
+			dialog.Title = "变更日志";
+		}
+	}
+	dialog.Width = jQuery(window).width();
+	dialog.Height = 610;
+	dialog.Drag = true;
+	dialog.checkDataChange = false;
+	dialog.maxiumnable = true;
+	dialog.URL = url;
+	dialog.show();
+}
+
+
+function check_form(thiswins,items)
+{
+	/* added by cyril on 2008-08-14 for td:8521 */
+	var isconn = false;
+	try {
+		var xmlhttp;
+	    if (window.XMLHttpRequest) {
+	    	xmlhttp = new XMLHttpRequest();
+	    }  
+	    else if (window.ActiveXObject) {
+	    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");  
+	    }
+	    var URL = "/systeminfo/CheckConn.jsp?userid=4&time="+new Date()+"&f_weaver_belongto_userid=4&f_weaver_belongto_usertype=0";
+	    xmlhttp.open("GET",URL, false);
+	    xmlhttp.send(null);
+	    var result = xmlhttp.status;
+	    if(result==200) {
+		    isconn = true;
+	    	var response_flag = xmlhttp.responseText;
+	    	if(response_flag!='0') {
+	    		var flag_msg = '';
+	    		if(response_flag=='1') {
+	    			var diag = new Dialog();
+					diag.Width = 300;
+					diag.Height = 180;
+					diag.ShowCloseButton=false;
+					diag.Title = "网页超时提醒";
+					//diag.InvokeElementId="pageOverlay"
+					diag.URL = "/wui/theme/ecology7/page/loginSmall.jsp?username=ywy";
+					diag.show();
+			        return false;
+	    		}
+	    		else if(response_flag=='2') {
+	    			flag_msg = '网络故障或其它原因导致您连接不上服务器，请复制下重要信息稍候再提交！';
+	    		}
+	    		//主从帐户特殊处理 by alan for TD10156
+	    		if(response_flag=='3') {
+	    			flag_msg = '提交信息失败,该页面非当前帐号打开,请刷新页面后再提交!';
+	   
+	    			return false;
+	    		}
+	    		flag_msg += '\r\n\r\n按【确定】继续,按【取消】停留在本页!';
+	        	//alert(xmlhttp.responseText);
+	        	return confirm(flag_msg);
+	        }
+	    }
+	    xmlhttp = null;
+
+	  	//检查多行文本框 oracle下检查HTML不能超过4000个字符
+	    
+	}
+	catch(e) {
+		return check_conn();
+	}
+	if(!isconn)
+		return check_conn();
+    /* end by cyril on 2008-08-14 for td:8521 */
+	
+	thiswin = thiswins
+	items = ","+items + ",";
+	
+	var tempfieldvlaue1 = "";
+	try{
+		tempfieldvlaue1 = document.getElementById("htmlfieldids").value;
+	}catch (e) {
+	}
+
+	for(i=1;i<=thiswin.length;i++){
+		tmpname = thiswin.elements[i-1].name;
+		tmpvalue = thiswin.elements[i-1].value;
+	    if(tmpvalue==null){
+	        continue;
+	    }
+
+		if(tmpname!="" && items.indexOf(","+tmpname+",")!=-1){
+			var href = location.href;
+			if(href && href.indexOf("Ext.jsp")!=-1){
+				window.__oriAlert__ = true;
+			}
+			if(tempfieldvlaue1.indexOf(tmpname+";") == -1){
+				while(tmpvalue.indexOf(" ") >= 0){
+					tmpvalue = tmpvalue.replace(" ", "");
+				}
+				while(tmpvalue.indexOf("\r\n") >= 0){
+					tmpvalue = tmpvalue.replace("\r\n", "");
+				}
+
+				if(tmpvalue == ""){
+					if(thiswin.elements[i-1].getAttribute("temptitle")!=null && thiswin.elements[i-1].getAttribute("temptitle")!=""){
+						if(window.__oriAlert__){
+							window.top.Dialog.alert("\""+thiswin.elements[i-1].getAttribute("temptitle")+"\""+"未填写");
+						}else{
+							var tempElement = thiswin.elements[i-1];
+							//ueditor必填验证
+							if (checkueditorContent(tempElement)) {
+								continue;
+							}
+							
+							window.top.Dialog.alert("&quot;"+thiswin.elements[i-1].getAttribute("temptitle")+"&quot;"+"未填写", function () {
+						    formElementFocus(tempElement);						
+							});
+						}
+						return false;
+					}else{
+						if(window.__oriAlert__){
+							try{
+								window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}catch(e){
+								Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}
+						}else{
+							try{
+								window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}catch(e){
+								Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}
+						}
+						return false;
+					}
+				}
+			} else {
+				var divttt=document.createElement("div");
+				divttt.innerHTML = tmpvalue;
+				var tmpvaluettt = jQuery.trim(jQuery(divttt).text());
+				if(tmpvaluettt == ""){
+					if(thiswin.elements[i-1].getAttribute("temptitle")!=null && thiswin.elements[i-1].getAttribute("temptitle")!=""){
+						if(window.__oriAlert__){
+							window.top.Dialog.alert("\";"+thiswin.elements[i-1].getAttribute("temptitle")+"\""+"未填写");
+						}else{
+							var tempElement = thiswin.elements[i-1];
+							
+							//ueditor必填验证
+							if (checkueditorContent(tempElement)) {
+								continue;
+							}
+							
+							window.top.Dialog.alert("&quot;"+thiswin.elements[i-1].getAttribute("temptitle")+"&quot;"+"未填写", function () {
+								formElementFocus(tempElement);
+							});
+							
+						}
+						return false;
+					}else{
+						if(window.__oriAlert__){
+							window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+						}else{
+							window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+						}
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+function isdel(){
+	var str = "确定要删除吗?";
+   if(!confirm(str)){
+       return false;
+   }
+       return true;
+ } 
+
+function issubmit(){
+	var str = "确定要提交吗?";
+   if(!confirm(str)){
+       return false;
+   }
+       return true;
+   } 
+
+/*流程里面使用，主要是因为流程内容放到iframe里面，通过response返回的时候，要返回的到其父窗口*/
+function wfforward(wfurl){
+	parent.location.href = wfurl;
+}
+
+function myescapecode(str)
+{
+	return encodeURIComponent(str);
+}
+</script>
+
+
+
+
+<script language="JavaScript"> 
+  var companyname = "E8TEST";
+  var str1 = "此系统由泛微软件授权于";
+
+  if(companyname.length >0 ){
+  	window.status = str1+companyname;
+  }
+</script>
+<!-- 删除 -->
+</head><body>
+
+<!--USB 验证 -->
+
+
+<!--WUI -->
+
+<link href="./jquery_dialog_wev8.css" type="text/css" rel="STYLESHEET">
+<script type="text/javascript" src="./jquery.min_wev8.js"></script>
+<script type="text/javascript" language="javascript" src="./jquery_dialog_wev8.js"></script>
+<script type="text/javascript" language="javascript">
+function ReloadOpenerByDialogClose() {
+    document.location="/login/VerifyRtxLogin.jsp?para=309E8BC1C22704EC492584DB74590E0F46935E31BF5D9843615D29FFD937E2D65A0A8FDCF036954FA28CA24C228A27AED38363A2C13A73A0A139A6A7C41BCC1C2463E5724171626CACE9623B91F01D11F47EB147625C1A043D8E590B8ACBF3C60810E1E171FCB14F6962248F137150E3";
+        return;
+
+
+}
+</script>
+
+
+
+<!--For wui-->
+
+
+<!--For wui-->
+<link type="text/css" rel="stylesheet" href="./wui_wev8.css">
+
+<!-- 字体设置，win7、vista系统使用雅黑字体,其他系统使用宋体 Start -->
+<!--
+添加至init_wev8.css 
+<link type='text/css' rel='stylesheet'  href='/wui/common/css/w7OVFont_wev8.css' id="FONT2SYSTEMF">
+ -->
+<script language="javascript"> 
+/*
+if (jQuery.client.version< 6) {
+	document.getElementById('FONT2SYSTEMF').href = "/wui/common/css/notW7AVFont_wev8.css";
+}
+*/
+</script> 
+<!-- 字体设置，win7、vista系统使用雅黑字体,其他系统使用宋体 End -->
+
+<!-- 页面切换效果Start -->
+
+<!-- 页面切换效果End -->
+
+
+<script language="javascript">
+
+//------------------------------
+// the folder of current skins 
+//------------------------------
+//当前使用的主题
+var GLOBAL_CURRENT_THEME = "ecology8";
+//当前主题使用的皮肤
+var GLOBAL_SKINS_FOLDER = "default";
+</script>
+
+<!--For wuiForm-->
+<script type="text/javascript" src="./jquery.wuiform_wev8.js"></script>
+<script language="javascript">
+jQuery(document).ready(function(){
+	wuiform.init();
+});
+</script>
+<link href="../css/Weaver_wev8.css" type="text/css" rel="STYLESHEET">
+<script language="javascript" src="../js/weaver_wev8.js"></script>
+<style type="text/css">
+        #LDay td{
+            height: 30px;
+            text-align: center;
+            font-family: "宋体";
+            font-size: 12px;
+        }
+         
+        #LDay div{
+            cursor:pointer;
+            width: 25px;
+            line-height: 25px;
+            margin:0 auto;
+        }
+        .title{
+        	color:#5FB5FE;
+        	width: 14%;
+        }
+		#currentDay{
+			font-family: "宋体";
+            font-size: 36px;
+            color: #E52355;
+		}
+		#currentWeekDay{
+            font-size: 12px;
+            color: #BCB8B9;
+            font-weight: bold;
+		}
+		
+		.LeftArrow{
+			float:left;
+			width: 7px;
+			height: 10px;
+			background-image: url(../images/left_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+			margin: 10px;
+			margin-right: 8px;
+			cursor:pointer;
+		}
+		.LeftArrow2{
+			float:left;
+			width: 7px;
+			height: 10px;
+			background-image: url(../images/left_hot_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+			margin: 10px;
+			margin-right: 8px;
+			cursor:pointer;
+		}
+		.changeMonth{
+			float:left;
+			font-size: 16px;
+			color: #E52355;
+			height: 28px;
+			line-height: 28px;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+		.RightArrow{
+			float:left;
+			width: 7px;
+			height: 10px;
+			background-image: url(../images/right_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+			margin: 10px;
+			margin-left: 8px;
+			cursor:pointer;
+		}
+		.RightArrow2{
+			float:left;
+			width: 7px;
+			height: 10px;
+			background-image: url(../images/right_hot_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+			margin: 10px;
+			margin-left: 8px;
+			cursor:pointer;
+		}
+		.notSelectMonthDay{
+			color: #BCB8B9;
+		}
+		.hand{
+			cursor:pointer;
+		}
+		.hashPlanDiv{
+			background-image: url(../images/green_circle_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+			color:#fff;
+		}
+		.currentCalendar{
+			background-image: url(../images/blue_circle_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+			color:#fff;
+		}
+		.currentSelect{
+			background-image: url(../images/blue_ring_wev8.png) ;
+			background-repeat:no-repeat;
+			text-align: center;
+		}
+		.planDataEvent{
+			height:100px;
+			width: 100%;
+			overflow-y: hidden;
+			position: relative;
+		}
+		.dataEvent{			
+			line-height: 30px;
+			border-width: 0px;
+			border-bottom: 1px;
+			border-style: solid;
+			border-color: #F3F2F2;
+			float: left;
+			height: 30px;
+			width: 100%;
+		}
+		.dataEvent1{			
+			line-height: 30px;
+			float: left;
+			height: 30px;
+			width: 2px;
+		}
+		.dataEvent2{			
+			line-height: 30px;
+			float: left;
+			height: 30px;
+			width: 80px;
+			background:#F5F5F5;
+		}
+		.dataEvent2_1{			
+			margin-left:5px;
+		}
+		.dataEvent3{			
+			margin-left: 5px;
+			height: 30px;
+			display:block;
+			overflow:hidden; 
+			text-overflow: ellipsis;
+			-o-text-overflow:ellipsis; 
+	
+		}
+		.addWorkPlan { 	
+		border:none;
+		BACKGROUND: url(../images/add_wev8.png) no-repeat;
+		color:#333;
+		WIDTH: 24px;
+		height:24px;
+		text-align:left;
+		cursor:pointer;
+		padding-left:10px;
+		padding-top:2px;
+		margin-right:5px;
+		background-position:50% 50%;
+		}
+		
+		.addWorkPlan2 { 	
+		border:none;BACKGROUND: url(../images/add_hot_wev8.png) no-repeat;color:#333;WIDTH: 94px;height:24px;text-align:left;cursor:pointer;padding-left:10px;padding-top:2px;margin-right:5px;
+		background-position:50% 50%;
+		}
+ 
+</style>
+
+<!-- bpf start 2013-10-23  -->	
+		
+		<style type="text/css">
+			.popDiv{
+				float:right;
+				position:absolute;
+				top:0px;
+				right:0px;
+				display:none;
+				border:#D8D8D8 1px solid;
+			}
+			.shadowDiv{
+				position:absolute;
+				float:left;
+				top:0px;
+				right:0px;
+				width:11px;
+				height:7px;
+				z-index:3;
+				display:none;
+				background-image:url(../images/angle_wev8.png);
+				background-repeat:no-repeat;
+			}
+		</style>
+		
+		<div class="shadowDiv" id="shadowBorderDiv"></div>
+
+
+
+
+<script language="javascript">
+
+function setBorder(){
+	var a = jQuery("span.selectedTitle");
+	var div = jQuery("#shadowBorderDiv");
+	//div.show();
+	var _top = a.offset().top+a.height();
+	var left = a.offset().left;
+	//div.width(a.width());
+	var width = a.width()+parseInt(a.css("padding-left").replace("px",""))+parseInt(a.css("padding-right").replace("px",""));
+	if(a.offset().top==0){
+		div.css("top",_top-5);
+		div.css("left",left+(width/2)-7);
+	}else{
+		div.each(function(){jQuery.dequeue(this,'fx');}).animate({top:_top-1,left:left-1}, 1500);
+	}
+}
+
+jQuery(document).ready(function(){
+	window.setTimeout(function(){
+		try{
+			try{
+				preDo();
+			}catch(e){}
+			//setBorder();
+			try{
+				afterDo();
+			}catch(e){}
+		}catch(e){jQuery("#shadowBorderDiv").hide();}
+	},10);
+	
+	jQuery(window).scroll(
+		function(){
+			try{
+				//setBorder();
+			}catch(e){}
+		}
+	);
+	
+	jQuery("#hoverBtnSpan").bind("click",function(e){
+		try{
+			//jQuery("#shadowBorderDiv").hide();
+			setBorder();
+		}catch(e){jQuery("#shadowBorderDiv").hide();}
+	});
+	
+});
+
+function startMouseMove(){
+	var handle = null;
+	jQuery(document).bind("mousemove",function(e){
+		var event = e || window.event;
+		var pageX = e.pageX;
+		var width = jQuery(document).width();
+		//console.log(jQuery(document).width()+"::"+e.pageX+"::"+handle);
+		if(Math.abs(pageX-width)<=50){
+	if(handle==null){
+		   handle=window.setTimeout(function(){
+			jQuery("#popDiv").show("slow");
+	},1000);
+	}
+		}else{
+		clearTimeout(handle);
+		handle=null;
+	}
+	});
+	jQuery("#popDiv").hover(function(){},function(){
+		jQuery("#popDiv").hide("slow");
+	});
+}
+
+
+function showHelp(){
+    /*var pathKey = this.location.pathname;
+    //alert(pathKey);
+    if(pathKey!=""){
+        pathKey = pathKey.substr(1);
+    }*/
+    var pathKey = "";
+	var __url = this.location.href;
+	try {
+		var __regexp = new RegExp("http://[^/]+", "gmi");
+		__url = __url.replace(__regexp, '');
+	} catch (e) {}
+	pathKey = encodeURIComponent(__url);
+    var operationPage = "http://help.e-cology.com.cn/help/RemoteHelp.jsp";
+    var screenWidth = window.screen.width*1;
+    var screenHeight = window.screen.height*1;
+
+    var isEnableExtranetHelp = 1;
+    if(isEnableExtranetHelp==1){
+    	//operationPage = "http://e-cology.com.cn/formmode/apps/ktree/ktreeHelp.jsp";
+    	operationPage = 'http://www.e-cology.com.cn/formmode/apps/ktree/ktreeHelp.jsp';
+    }
+    window.open(operationPage+"?pathKey="+pathKey,"_blank","top=0,left="+(screenWidth-800)/2+",height="+(screenHeight-90)+",width=1000,status=no,scrollbars=yes,toolbar=yes,menubar=no,location=no");
+}
+function openFavouriteBrowser()
+{  
+	
+	var BacoTitle = jQuery("#BacoTitle");
+	var pagename = "";
+	var navName = "";
+	var fav_uri = "%2Fpage%2Felement%2FMyCalendar%2FView.jsp";
+	var fav_querystring = "eid%3D57";
+	
+	try
+	{
+			var e8tabcontainer = jQuery("div[_e8tabcontainer='true']",parent.document);
+			if(e8tabcontainer.length > 0) 
+			{
+				fav_uri = escape(parent.window.location.pathname);
+				fav_querystring = escape(parent.window.location.search);
+				navName = e8tabcontainer.find("#objName").text();
+			}else{
+				navName = jQuery("#objName").text();
+			}
+			//alert(fav_uri+"  "+fav_querystring)
+	}
+	catch(e)
+	{
+		
+	}
+	if(BacoTitle)
+	{
+		pagename = BacoTitle.text();
+	}
+	if(!pagename){
+		pagename = navName;
+	}
+	pagename = escape(pagename); 
+	//window.showModalDialog('/systeminfo/BrowserMain.jsp?url=/favourite/FavouriteBrowser.jsp&fav_pagename='+pagename+'&fav_uri='+fav_uri+'&fav_querystring='+fav_querystring+'&mouldID=doc');
+	//var dialogurl = '/systeminfo/BrowserMain.jsp?url=/favourite/FavouriteBrowser.jsp&fav_pagename='+pagename+'&fav_uri='+fav_uri+'&fav_querystring='+fav_querystring+'&mouldID=doc';
+	var dialogurl = '/systeminfo/BrowserMain.jsp?url=/favourite/FavouriteBrowser.jsp&fav_uri='+fav_uri+'&mouldID=doc';  //fav_pagename和fav_querystring不通过url传值，而通过session获取，避免url过长时，导致问题
+	var dialog = new window.top.Dialog();
+	dialog.currentWindow = window;
+	dialog.URL = dialogurl;
+	dialog.Title = "收藏夹";
+	dialog.Width = 550 ;
+	dialog.Height = 600;
+	dialog.Drag = true;
+	dialog.show();
+}
+</script>
+
+<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
+<colgroup>
+<col width="">
+</colgroup><tbody><tr>
+	<td valign="top">
+		<div style="border:#F3F2F2 1px solid;">
+			<table id="Calendar" width="100%" border="0">
+		        <tbody><tr>
+		            <td>
+			                <table height="80" width="100%">
+		                        <tbody><tr align="center">
+		                        	<td class="hand" align="center" width="33%" onclick="todayClick()" title="今天">
+		                        		<span id="currentDay">5</span>
+		                        		<br>
+		                        		<span id="currentWeekDay">星期二</span>
+		                        	</td>
+		                            <td align="center" style="border-left:#E4E1E1 1px solid;">
+		                            	<div style="display: inline-block;">
+			                                <div class="LeftArrow" id="prevbtn" title="上一个月" onclick="prev(this)"></div>
+			                                <div class="changeMonth " id="showDate">2017年12月</div>
+			                                <div class="RightArrow" id="nextbtn" title="下一个月" onclick="next(this)"></div>
+		                                </div>
+		                            </td>
+		                        </tr>
+		                        <tr style="height:1px!important;" class="Spacing">
+									<td class="paddingLeft0" colspan="2">
+										<div class="intervalDivClass">
+									</div></td>
+								</tr>
+			                </tbody></table>
+			                <table id="LDay" width="100%"><tbody><tr><td class="title">日</td><td class="title">一</td><td class="title">二</td><td class="title">三</td><td class="title">四</td><td class="title">五</td><td class="title">六</td></tr><tr style="height:1px!important;" class="Spacing"><td class="paddingLeft0" colspan="7"><div class="intervalDivClass" style="width:100%"></div></td></tr><tr><td id="2017-11-26" onclick="prev(this)" data=""><div class="notSelectMonthDay " title="2017-11-26">26</div></td><td id="2017-11-27" onclick="prev(this)" data="18846,18849"><div class="notSelectMonthDay  hashPlanDiv" title="2017-11-27">27</div></td><td id="2017-11-28" onclick="prev(this)" data="18853,18863,18860,18862,18861"><div class="notSelectMonthDay  hashPlanDiv" title="2017-11-28">28</div></td><td id="2017-11-29" onclick="prev(this)" data=""><div class="notSelectMonthDay " title="2017-11-29">29</div></td><td id="2017-11-30" onclick="prev(this)" data="18871"><div class="notSelectMonthDay  hashPlanDiv" title="2017-11-30">30</div></td><td id="2017-12-01" onclick="clickDate(this)" data="18878,18879,18880,18872"><div title="2017-12-01" class="hashPlanDiv">1</div></td><td id="2017-12-02" onclick="clickDate(this)" data=""><div title="2017-12-02">2</div></td></tr><tr><td id="2017-12-03" onclick="clickDate(this)" data="18882"><div title="2017-12-03" class="hashPlanDiv">3</div></td><td id="2017-12-04" onclick="clickDate(this)" data=""><div title="2017-12-04">4</div></td><td id="2017-12-05" onclick="clickDate(this)" data=""><div class="currentCalendar" title="2017-12-05">5</div></td><td id="2017-12-06" onclick="clickDate(this)" data=""><div title="2017-12-06">6</div></td><td id="2017-12-07" onclick="clickDate(this)" data=""><div title="2017-12-07">7</div></td><td id="2017-12-08" onclick="clickDate(this)" data=""><div title="2017-12-08">8</div></td><td id="2017-12-09" onclick="clickDate(this)" data=""><div title="2017-12-09">9</div></td></tr><tr><td id="2017-12-10" onclick="clickDate(this)" data=""><div title="2017-12-10">10</div></td><td id="2017-12-11" onclick="clickDate(this)" data=""><div title="2017-12-11">11</div></td><td id="2017-12-12" onclick="clickDate(this)" data=""><div title="2017-12-12">12</div></td><td id="2017-12-13" onclick="clickDate(this)" data=""><div title="2017-12-13">13</div></td><td id="2017-12-14" onclick="clickDate(this)" data=""><div title="2017-12-14">14</div></td><td id="2017-12-15" onclick="clickDate(this)" data=""><div title="2017-12-15">15</div></td><td id="2017-12-16" onclick="clickDate(this)" data=""><div title="2017-12-16">16</div></td></tr><tr><td id="2017-12-17" onclick="clickDate(this)" data=""><div title="2017-12-17">17</div></td><td id="2017-12-18" onclick="clickDate(this)" data=""><div title="2017-12-18">18</div></td><td id="2017-12-19" onclick="clickDate(this)" data=""><div title="2017-12-19">19</div></td><td id="2017-12-20" onclick="clickDate(this)" data=""><div title="2017-12-20">20</div></td><td id="2017-12-21" onclick="clickDate(this)" data=""><div title="2017-12-21">21</div></td><td id="2017-12-22" onclick="clickDate(this)" data=""><div title="2017-12-22">22</div></td><td id="2017-12-23" onclick="clickDate(this)" data=""><div title="2017-12-23">23</div></td></tr><tr><td id="2017-12-24" onclick="clickDate(this)" data=""><div title="2017-12-24">24</div></td><td id="2017-12-25" onclick="clickDate(this)" data=""><div title="2017-12-25">25</div></td><td id="2017-12-26" onclick="clickDate(this)" data=""><div title="2017-12-26">26</div></td><td id="2017-12-27" onclick="clickDate(this)" data=""><div title="2017-12-27">27</div></td><td id="2017-12-28" onclick="clickDate(this)" data=""><div title="2017-12-28">28</div></td><td id="2017-12-29" onclick="clickDate(this)" data=""><div title="2017-12-29">29</div></td><td id="2017-12-30" onclick="clickDate(this)" data=""><div title="2017-12-30">30</div></td></tr><tr><td id="2017-12-31" onclick="clickDate(this)" data=""><div title="2017-12-31">31</div></td><td id="2018-01-01" onclick="next(this)" data=""><div class="notSelectMonthDay " title="2018-01-01">1</div></td><td id="2018-01-02" onclick="next(this)" data=""><div class="notSelectMonthDay " title="2018-01-02">2</div></td><td id="2018-01-03" onclick="next(this)" data=""><div class="notSelectMonthDay " title="2018-01-03">3</div></td><td id="2018-01-04" onclick="next(this)" data=""><div class="notSelectMonthDay " title="2018-01-04">4</div></td><td id="2018-01-05" onclick="next(this)" data=""><div class="notSelectMonthDay " title="2018-01-05">5</div></td><td id="2018-01-06" onclick="next(this)" data=""><div class="notSelectMonthDay " title="2018-01-06">6</div></td></tr></tbody></table>
+						
+		            </td>
+		        </tr>
+		        <tr style="height:1px!important;" class="Spacing">
+					<td class="paddingLeft0">
+						<div class="intervalDivClass">
+					</div></td>
+				</tr>
+				<tr>
+		            <td>
+		            	 <div id="planDataEvent" class="planDataEvent" tabindex="5000" style="height: 10px; overflow-y: hidden; outline: none;">
+	           				<div id="planDataEventchd" style="height: 9px;"></div>
+		            	</div>
+		            </td>
+		        </tr>
+				<tr>
+					<td style="text-align: center;height:30px;">
+						<input class="addWorkPlan" type="button" onmouseout="" onclick="doAdd()" title="添加">
+					</td>
+				</tr>
+		    </tbody></table>
+		    </div>
+	</td>	 
+ 
+</tr>
+</tbody></table>
+
+<script language="javascript">
+	var initHeight=380;
+	var planData=null;
+	var currentToday=new Date();
+	var pageDate=new Date();
+	var lastOpt;
+	var lastOptCss="";
+	var calendarDialog;
+	var currentSelectDate="";
+	function initToday(){
+        var todayD=currentToday.getDate();//本日
+        var todayWD=currentToday.getDay();//本周几
+        $("#currentDay").html(todayD);
+ 		$("#currentWeekDay").html(getWeekDay(todayWD));
+	}
+    //实现日历
+    function calendar(showObj) {
+    	clearData();
+        var year = pageDate.getFullYear();      //选中年
+        var month = pageDate.getMonth() + 1;    //选中月
+        var day = pageDate.getDate();           //选中日
+		var todayY=currentToday.getFullYear();//本年
+		var todayM=currentToday.getMonth()+1;//本月
+		var todayD=currentToday.getDate();//今天
+		var todayStr=todayY+"-"+(todayM>9?todayM:"0"+todayM)+"-"+(todayD>9?todayD:"0"+todayD);
+		var selectDate=year+"-"+(month>9?month:"0"+month)+"-"+(day>9?day:"0"+day);
+ 		if("7"=="7"||"7"=="9"){
+ 			$("#showDate").html(year+"年"+(month>9?month:"0"+month)+"月");
+ 		}else{
+ 			$("#showDate").html(year+"/"+(month>9?month:"0"+month));
+ 		}
+ 		//计算出vStart,vEnd具体时间
+ 		//选中月第一天是星期几（距星期日离开的天数）
+        var startDay = new Date(year, month - 1, 1).getDay();
+ 		var firstdate = new Date(year, month-1, 1);//选中月第一天
+ 		var lastMonth = new Date(year, month-2, 1);//选中月上个月第一天
+		var nextMonth = new Date(year, month, 1);//选中月下月第一天
+		
+		var lastStr = lastMonth.getFullYear()+"-"+((lastMonth.getMonth() + 1)>9?(lastMonth.getMonth() + 1):"0"+(lastMonth.getMonth() + 1)); 
+		var currentStr=year+"-"+(month>9?month:"0"+month);
+ 		var nextStr = nextMonth.getFullYear()+"-"+((nextMonth.getMonth() + 1)>9?(nextMonth.getMonth() + 1):"0"+(nextMonth.getMonth() + 1));   
+		
+ 		var lastMothStart = DateAdd("d", -startDay, firstdate).getDate();//日期第一天
+ 		var lastMothend = DateAdd("d", -1, firstdate).getDate();//上月的最后一天
+
+        //本月有多少天(即最后一天的getDate()，但是最后一天不知道，我们可以用“上个月的0来表示本月的最后一天”)
+        var nDays = new Date(year, month, 0).getDate();
+ 
+        //开始画日历
+        var numRow = 0;  //记录行的个数，到达7的时候创建tr
+        var totalRow=1;
+        var i;        //日期
+        var html = '<tr><td class="title">日</td>'+
+			        '<td class="title">一</td>'+
+			        '<td class="title">二</td>'+
+			        '<td class="title">三</td>'+
+        			'<td class="title">四</td>'+
+        			'<td class="title">五</td>'+
+        			'<td class="title">六</td></tr>';
+        //第一行
+        html+='<tr style="height:1px!important;" class="Spacing"><td class="paddingLeft0" colspan="7"><div class="intervalDivClass" style="width:100%"></div></td></tr>';
+        html += '<tr>';
+        for (i = lastMothStart; startDay!=0&&i<=lastMothend; i++) {
+            html += '<td  id="'+lastStr+'-'+i+'" onclick="prev(this)" data="">';
+            html+='<div class="notSelectMonthDay " title="'+lastStr+'-'+i+'">';
+            html+=i;
+            html+='</div></td>';
+            numRow++;
+        }
+        for (var j = 1; j <= nDays; j++) {
+            if (year==todayY&&month==todayM&&j == todayD) {
+                html += '<td id="'+currentStr+'-'+(j>9?j:'0'+j)+'" onclick="clickDate(this)" data="" >';  
+                html += '<div class="currentCalendar" title="'+currentStr+'-'+(j>9?j:"0"+j)+'">';
+            }
+            else {
+                html += '<td id="'+currentStr+'-'+(j>9?j:'0'+j)+'" onclick="clickDate(this)" data="">';
+                html += '<div title="'+currentStr+'-'+(j>9?j:"0"+j)+'">';
+            }
+            html += j; 
+            html += '</div></td>';
+            numRow++;
+            if (numRow == 7) {  //如果已经到一行（一周）了，重新创建tr
+                numRow = 0;
+                totalRow++;
+                html += '</tr><tr>';
+            }
+        }
+		//补充后一个月
+        if(numRow>0){
+        	for(var j=1;j<=7;j++){
+	        	html += '<td  id="'+nextStr+'-0'+j+'" onclick="next(this)" data="">';
+	        	html+='<div class="notSelectMonthDay " title="'+nextStr+'-0'+j+'">'+j+'</div></td>';
+	            numRow++;
+	        	if (numRow == 7) {  //如果已经到一行（一周）了，重新创建tr
+	                numRow = 0;
+	                html += '</tr>';
+	                break;
+	            }
+        	}
+        }
+        $('#LDay').html(html);
+        initHeight=parseInt($('#LDay').height())+80+40+10+15;
+        if(window.name&&window.name!=''){
+    		parent.document.getElementsByName(window.name)[0].height=initHeight;
+    	}
+        //标记选中日期
+        if(showObj!='undefined'&&showObj!=undefined){
+        	$('div[title="'+showObj+'"]').addClass("currentSelect");
+        }else{
+        	if(selectDate!=todayStr){
+	        	$('div[title="'+selectDate+'"]').addClass("currentSelect");
+        	}
+        }
+        //ajax获取数据
+        $.post("WorkPlanViewOperation.jsp", 
+        	{"selectdate":selectDate},
+	   	function(data){
+			var sd=$(".currentSelect").attr("title");
+		 	if(sd==undefined||selectDate=='undefined'){
+		 		sd=$(".currentCalendar").attr("title");
+		 	}
+	   		var datas=data.dateevents;
+	   		planData=data.events;
+	   		for(var key in datas){
+	   			//$('#'+key).addClass("hashPlanTD");
+	   			$('#'+key).children('div').eq(0).addClass("hashPlanDiv"); 
+	   			$('#'+key).attr("data",datas[key]);
+	   			if(key==sd){
+	   				//clickDate($('#'+key));
+	   				showData($('#'+sd));
+	   			}
+	   		}
+   		});
+    }
+    function clearData(){
+    	if(window.name&&window.name!=''){
+    		parent.document.getElementsByName(window.name)[0].height=initHeight;
+    	}
+    	$('#planDataEventchd').html("");
+    	$('#planDataEvent').height(10);
+    	$('#planDataEventchd').height(9);
+    	//$('#planDataEvent').removeClass("planDataEvent");
+    	jQuery("#planDataEvent").perfectScrollbar("update");
+    }
+
+    //点击日期
+    function clickDate(obj){
+ 		showData(obj);
+ 		reGetDate();
+ 	}
+ 	
+ 	function showData(obj){
+ 		if(window.name&&window.name!=''){
+	    	parent.document.getElementsByName(window.name)[0].height=initHeight;
+	    }
+ 		if(lastOpt==undefined||lastOpt=='undefined'){
+
+    	}else{
+    	   $(lastOpt).children('div').eq(0).addClass(lastOptCss);	
+    	}
+    	
+    	$('div').removeClass("currentSelect");
+    	var divObj=$(obj).children('div').eq(0);
+    	
+    	lastOpt=obj;
+    	lastOptCss=$(divObj).attr("class");
+    	$(divObj).removeClass(lastOptCss);
+    	$(divObj).addClass("currentSelect");
+    	currentSelectDate=$(divObj).attr("title");
+    	clearData();
+ 		var data=$(obj).attr("data");
+ 		if(data=='') return false;
+ 		var datas;
+ 		if (typeof (data) == "string") {
+            datas=data.split(",");
+        }
+
+        if (typeof (data) == "object") {
+            datas = data;
+        }
+		//$('#planDataEvent').addClass("planDataEvent");
+		
+ 		var html='';
+ 		var cnt = 0;
+ 		for(var key in datas){
+ 			if(isNaN(key)) continue;
+ 			var c=tc(planData[datas[key]][5]);
+ 			html+='<div class="hand dataEvent" onclick="clickData(\''+datas[key]+'\')" title="'+planData[datas[key]][6]+'\n'+planData[datas[key]][1]+'">';
+		    html+='<div class="dataEvent1" style="background:'+c+';"></div>';
+		    html+='<div class="dataEvent2" ><div class="dataEvent2_1">'+planData[datas[key]][3]+'&nbsp;&nbsp;'+planData[datas[key]][4]+'</div></div>';
+		    html+='<div class="dataEvent3">'+planData[datas[key]][1]+'</div>';
+		    html+='</div>';
+		    cnt = cnt + 1;
+ 		}
+ 		if(html=='') html="暂无日程安排";
+ 		//html = '<div>'+html+'</div>';
+ 		$('#planDataEventchd').html(html);
+ 		$('#planDataEventchd').height(cnt * 33);
+ 		if(cnt>2){
+	 		if(window.name&&window.name!=''){
+	    		parent.document.getElementsByName(window.name)[0].height=initHeight+100;
+	    	}
+ 			$('#planDataEvent').height(100);
+ 			jQuery("#planDataEvent").perfectScrollbar("update");
+ 		}else{
+ 			if(window.name&&window.name!=''){
+	    		parent.document.getElementsByName(window.name)[0].height=initHeight+(cnt * 33)+1;
+	    	}
+ 			$('#planDataEvent').height((cnt * 33)+1);
+ 		} 		
+ 	}
+ 	
+ 	var hasRfdh = false;
+ 	//点击数据
+ 	function clickData(id){
+ 		var url='/workplan/data/WorkPlanDetail.jsp?from=1&workid='+id;
+ 		//openFullWindowHaveBar(url);
+ 		if(window.top.Dialog){
+			calendarDialog = new window.top.Dialog();
+		} else {
+			calendarDialog = new Dialog();
+		};
+		hasRfdh = true;
+	  	calendarDialog.URL =url;
+	  	calendarDialog.Width = 600;
+		calendarDialog.Height = 600;
+	  	calendarDialog.checkDataChange = false;
+	    calendarDialog.Title="日程";
+	    calendarDialog.show();
+ 	}
+ function tc(d) {
+      function zc(c, i) {
+          var d = "666666888888aaaaaabbbbbbdddddda32929cc3333d96666e69999f0c2c2b1365fdd4477e67399eea2bbf5c7d67a367a994499b373b3cca2cce1c7e15229a36633cc8c66d9b399e6d1c2f029527a336699668cb399b3ccc2d1e12952a33366cc668cd999b3e6c2d1f01b887a22aa9959bfb391d5ccbde6e128754e32926265ad8999c9b1c2dfd00d78131096184cb05288cb8cb8e0ba52880066aa008cbf40b3d580d1e6b388880eaaaa11bfbf4dd5d588e6e6b8ab8b00d6ae00e0c240ebd780f3e7b3be6d00ee8800f2a640f7c480fadcb3b1440edd5511e6804deeaa88f5ccb8865a5aa87070be9494d4b8b8e5d4d47057708c6d8ca992a9c6b6c6ddd3dd4e5d6c6274878997a5b1bac3d0d6db5a69867083a894a2beb8c1d4d4dae54a716c5c8d8785aaa5aec6c3cedddb6e6e41898951a7a77dc4c4a8dcdccb8d6f47b08b59c4a883d8c5ace7dcce";
+          return "#" + d.substring(c * 30 + i * 6, c * 30 + (i + 1) * 6);
+      }
+      return zc(d, 0);
+  }
+  
+  
+  function doAdd(){
+  	var date=new Date();
+ 	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	var day = date.getDate();
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+           
+	var selectDate=year+"-"+(month>9?month:"0"+month)+"-"+(day>9?day:"0"+day);
+	if(currentSelectDate!=''){
+		selectDate=currentSelectDate;
+	}
+	var beginTime=(hours>9?hours:"0"+hours)+":"+(minutes>9?minutes:"0"+minutes);
+	var url='/workplan/data/WorkPlanEdit.jsp?from=1&selectUser=4&planName=&beginDate='+selectDate+'&beginTime='+beginTime+'&endDate='+selectDate+'&endTime=';
+  	//openFullWindowHaveBar(url);
+	
+  	if(window.top.Dialog){
+		calendarDialog = new window.top.Dialog();
+	} else {
+		calendarDialog = new Dialog();
+	};
+  	calendarDialog.URL =url;
+  	calendarDialog.Width = 600;
+	calendarDialog.Height = 600;
+  	calendarDialog.checkDataChange = false;
+    calendarDialog.Title="日程";
+    hasRfdh = true;
+    calendarDialog.show();
+  }
+  
+ 
+ function refashDate(){
+ 	if(calendarDialog &&calendarDialog.closed && hasRfdh ){
+ 		hasRfdh = false;
+   		reGetDate();
+ 	}
+ }
+ 
+ function reGetDate(){
+ 	var selectDate=$(".currentSelect").attr("title");
+ 	if(selectDate==undefined||selectDate=='undefined'){
+ 		selectDate=$(".currentCalendar").attr("title");
+ 	}
+ 	
+	$.post("WorkPlanViewOperation.jsp", 
+    {"selectdate":selectDate},
+  	function(data){
+  		var datas=data.dateevents;
+  		planData=data.events;
+  		$(".hashPlanDiv").parent("TD").attr("data","");
+  		$(".hashPlanDiv").removeClass("hashPlanDiv");
+  		clearData();
+  		var sd=$(".currentSelect").attr("title");
+	 	if(sd==undefined||sd=='undefined'){
+	 		sd=$(".currentCalendar").attr("title");
+	 	}
+  		for(var key in datas){
+  			//$('#'+key).addClass("hashPlanTD");
+  			$('#'+key).children('div').eq(0).addClass("hashPlanDiv"); 
+  			$('#'+key).attr("data",datas[key]);
+  			if(key==sd){
+  				//clickDate($('#'+key));
+  				showData($('#'+key));
+  			}
+  			
+  		}
+ 	});
+ }
+ 
+  
+  function closeByHand(){
+  	calendarDialog.close();	
+  }
+  
+  function refreshCal(){
+  	calendar();
+	calendarDialog.close();	
+	
+}
+        
+ function getWeekDay(day){
+ 	var weekDay="";
+    if(day==0){
+  		weekDay="星期日";
+    }else if(day==1){
+    	weekDay="星期一";
+    }else if(day==2){
+    	weekDay="星期二";
+    }else if(day==3){
+    	weekDay="星期三";
+    }else if(day==4){
+    	weekDay="星期四";
+    }else if(day==5){
+    	weekDay="星期五";
+    }else if(day==6){
+    	weekDay="星期六";
+    }
+ 	return weekDay;
+ }
+ function next(obj){
+ 	pageDate.setDate(1);//设置本月第一天
+ 	pageDate.setMonth(pageDate.getMonth() + 1);
+ 	var idv=$(obj).attr("id");
+ 	if(idv!='prevbtn'&&idv!='nextbtn'){
+ 		calendar(idv);
+ 	}else{
+ 		calendar();
+ 	}
+ }
+ 
+ function prev(obj){
+ 	pageDate.setDate(1);//设置本月第一天
+ 	 pageDate.setMonth(pageDate.getMonth() - 1);
+ 	var idv=$(obj).attr("id");
+ 	if(idv!='prevbtn'&&idv!='nextbtn'){
+ 		calendar(idv);
+ 	}else{
+ 		calendar();
+ 	}
+ 	
+ }
+ 
+ function todayClick(){
+	pageDate=new Date(currentToday.getFullYear(),currentToday.getMonth(),currentToday.getDate());
+	calendar();
+ }
+ 
+ function DateAdd(interval, number, idate) {
+ 	   var date=new Date(idate.getFullYear(),idate.getMonth(),idate.getDate());
+       number = parseInt(number);
+       switch (interval) {
+           case "y": date.setFullYear(date.getFullYear() + number); break;
+           case "m": date.setMonth(date.getMonth() + number); break;
+           case "d": date.setDate(date.getDate() + number); break;
+           case "w": date.setDate(date.getDate() + 7 * number); break;
+           case "h": date.setHours(date.getHours() + number); break;
+           case "n": date.setMinutes(date.getMinutes() + number); break;
+           case "s": date.setSeconds(date.getSeconds() + number); break;
+           case "l": date.setMilliseconds(date.getMilliseconds() + number); break;
+       }
+       return date;
+   }
+        
+var isSubmit=false;
+
+$(document).ready(function() {
+	jQuery(".addWorkPlan").hover(function(){
+		jQuery(this).addClass("addWorkPlan2");
+	},function(){
+		jQuery(this).removeClass("addWorkPlan2");
+	});
+	jQuery(".LeftArrow").hover(function(){
+		jQuery(this).addClass("LeftArrow2");
+	},function(){
+		jQuery(this).removeClass("LeftArrow2");
+	});
+	jQuery(".RightArrow").hover(function(){
+		jQuery(this).addClass("RightArrow2");
+	},function(){
+		jQuery(this).removeClass("RightArrow2");
+	});
+	 initToday();
+	 calendar();
+	 window.setInterval("refashDate()",100);
+	 jQuery("#planDataEvent").perfectScrollbar();
+});
+
+
+
+</script>
+
+
+<div id="ascrail2000" style="width: 8px; z-index: 10003; position: absolute; top: 317px; left: 533px; height: 10px; display: none;"><div style="position: relative; top: 0px; float: right; width: 8px; height: 0px; background-color: rgb(153, 153, 153); border: none; background-clip: padding-box; border-radius: 5px;"></div></div></body></html>

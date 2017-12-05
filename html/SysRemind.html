@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)http://e8.weaver.com.cn/system/SysRemind.jsp -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- 
+添加至init.css
+<style type="text/css">
+	html{height:100%;}
+</style>
+ -->
+
+
+
+
+
+
+
+<script type="text/javascript" src="./jquery.min_wev8.js"></script>
+
+<script language="javascript" type="text/javascript" src="./swfobject_wev8.js"></script>
+
+
+<!-- js 整合到 init_wev8.js -->
+<script type="text/javascript" src="./jquery.table_wev8.js"></script>
+<script language="javascript" type="text/javascript" src="./init_wev8.js"></script>
+<script language="javascript" src="./wbusb_wev8.js"></script>
+<script type="text/javascript" src="./jquery.client_wev8.js"></script>
+<script type="text/javascript" src="./jquery.jNice_wev8.js"></script>
+<script type="text/javascript" src="./jquery.autocomplete_wev8.js"></script>
+<script type="text/javascript" src="./browser_wev8.js"></script>
+<script language="javascript" src="./zDialog_wev8.js"></script>
+<script type="text/javascript" src="./hoverBtn_wev8.js"></script>
+<script type="text/javascript" src="./weaver_lang_7_wev8.js"></script>
+
+<!-- init.css, 所有css文件都在此文件中引入 -->
+<link rel="stylesheet" href="./init_wev8.css" type="text/css">
+
+
+
+<script language="javascript">
+window["_jsessionid"] = "abcUW5q4cmiXm4BaYbHaw";
+function check_conn() {
+	return confirm('网络故障或其它原因导致您连接不上服务器，请复制下重要信息稍候再提交！\r\n\r\n按【确定】继续,按【取消】停留在本页!');
+}
+
+function _onViewLog(operateitem,sqlwhere,id){
+	if(!sqlwhere)sqlwhere = "";
+	var dialog = new window.top.Dialog();
+	dialog.currentWindow = window;
+	dialog.Title = "查看日志";
+	var url = "/docs/tabs/DocCommonTab.jsp?_fromURL=3&operateitem="+operateitem+"&sqlwhere="+sqlwhere;
+	if(id){
+		url = "/docs/tabs/DocCommonTab.jsp?_fromURL=3&relatedid="+id+"&operateitem="+operateitem+"&sqlwhere="+sqlwhere;
+		if(operateitem==418||operateitem==419||operateitem==420){
+			dialog.Title = "变更日志";
+		}
+	}
+	dialog.Width = jQuery(window).width();
+	dialog.Height = 610;
+	dialog.Drag = true;
+	dialog.checkDataChange = false;
+	dialog.maxiumnable = true;
+	dialog.URL = url;
+	dialog.show();
+}
+
+
+function check_form(thiswins,items)
+{
+	/* added by cyril on 2008-08-14 for td:8521 */
+	var isconn = false;
+	try {
+		var xmlhttp;
+	    if (window.XMLHttpRequest) {
+	    	xmlhttp = new XMLHttpRequest();
+	    }  
+	    else if (window.ActiveXObject) {
+	    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");  
+	    }
+	    var URL = "/systeminfo/CheckConn.jsp?userid=4&time="+new Date()+"&f_weaver_belongto_userid=4&f_weaver_belongto_usertype=0";
+	    xmlhttp.open("GET",URL, false);
+	    xmlhttp.send(null);
+	    var result = xmlhttp.status;
+	    if(result==200) {
+		    isconn = true;
+	    	var response_flag = xmlhttp.responseText;
+	    	if(response_flag!='0') {
+	    		var flag_msg = '';
+	    		if(response_flag=='1') {
+	    			var diag = new Dialog();
+					diag.Width = 300;
+					diag.Height = 180;
+					diag.ShowCloseButton=false;
+					diag.Title = "网页超时提醒";
+					//diag.InvokeElementId="pageOverlay"
+					diag.URL = "/wui/theme/ecology7/page/loginSmall.jsp?username=ywy";
+					diag.show();
+			        return false;
+	    		}
+	    		else if(response_flag=='2') {
+	    			flag_msg = '网络故障或其它原因导致您连接不上服务器，请复制下重要信息稍候再提交！';
+	    		}
+	    		//主从帐户特殊处理 by alan for TD10156
+	    		if(response_flag=='3') {
+	    			flag_msg = '提交信息失败,该页面非当前帐号打开,请刷新页面后再提交!';
+	   
+	    			return false;
+	    		}
+	    		flag_msg += '\r\n\r\n按【确定】继续,按【取消】停留在本页!';
+	        	//alert(xmlhttp.responseText);
+	        	return confirm(flag_msg);
+	        }
+	    }
+	    xmlhttp = null;
+
+	  	//检查多行文本框 oracle下检查HTML不能超过4000个字符
+	    
+	}
+	catch(e) {
+		return check_conn();
+	}
+	if(!isconn)
+		return check_conn();
+    /* end by cyril on 2008-08-14 for td:8521 */
+	
+	thiswin = thiswins
+	items = ","+items + ",";
+	
+	var tempfieldvlaue1 = "";
+	try{
+		tempfieldvlaue1 = document.getElementById("htmlfieldids").value;
+	}catch (e) {
+	}
+
+	for(i=1;i<=thiswin.length;i++){
+		tmpname = thiswin.elements[i-1].name;
+		tmpvalue = thiswin.elements[i-1].value;
+	    if(tmpvalue==null){
+	        continue;
+	    }
+
+		if(tmpname!="" && items.indexOf(","+tmpname+",")!=-1){
+			var href = location.href;
+			if(href && href.indexOf("Ext.jsp")!=-1){
+				window.__oriAlert__ = true;
+			}
+			if(tempfieldvlaue1.indexOf(tmpname+";") == -1){
+				while(tmpvalue.indexOf(" ") >= 0){
+					tmpvalue = tmpvalue.replace(" ", "");
+				}
+				while(tmpvalue.indexOf("\r\n") >= 0){
+					tmpvalue = tmpvalue.replace("\r\n", "");
+				}
+
+				if(tmpvalue == ""){
+					if(thiswin.elements[i-1].getAttribute("temptitle")!=null && thiswin.elements[i-1].getAttribute("temptitle")!=""){
+						if(window.__oriAlert__){
+							window.top.Dialog.alert("\""+thiswin.elements[i-1].getAttribute("temptitle")+"\""+"未填写");
+						}else{
+							var tempElement = thiswin.elements[i-1];
+							//ueditor必填验证
+							if (checkueditorContent(tempElement)) {
+								continue;
+							}
+							
+							window.top.Dialog.alert("&quot;"+thiswin.elements[i-1].getAttribute("temptitle")+"&quot;"+"未填写", function () {
+						    formElementFocus(tempElement);						
+							});
+						}
+						return false;
+					}else{
+						if(window.__oriAlert__){
+							try{
+								window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}catch(e){
+								Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}
+						}else{
+							try{
+								window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}catch(e){
+								Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+							}
+						}
+						return false;
+					}
+				}
+			} else {
+				var divttt=document.createElement("div");
+				divttt.innerHTML = tmpvalue;
+				var tmpvaluettt = jQuery.trim(jQuery(divttt).text());
+				if(tmpvaluettt == ""){
+					if(thiswin.elements[i-1].getAttribute("temptitle")!=null && thiswin.elements[i-1].getAttribute("temptitle")!=""){
+						if(window.__oriAlert__){
+							window.top.Dialog.alert("\";"+thiswin.elements[i-1].getAttribute("temptitle")+"\""+"未填写");
+						}else{
+							var tempElement = thiswin.elements[i-1];
+							
+							//ueditor必填验证
+							if (checkueditorContent(tempElement)) {
+								continue;
+							}
+							
+							window.top.Dialog.alert("&quot;"+thiswin.elements[i-1].getAttribute("temptitle")+"&quot;"+"未填写", function () {
+								formElementFocus(tempElement);
+							});
+							
+						}
+						return false;
+					}else{
+						if(window.__oriAlert__){
+							window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+						}else{
+							window.top.Dialog.alert("必要信息不完整，红色叹号为必填项！！");
+						}
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+function isdel(){
+	var str = "确定要删除吗?";
+   if(!confirm(str)){
+       return false;
+   }
+       return true;
+ } 
+
+function issubmit(){
+	var str = "确定要提交吗?";
+   if(!confirm(str)){
+       return false;
+   }
+       return true;
+   } 
+
+/*流程里面使用，主要是因为流程内容放到iframe里面，通过response返回的时候，要返回的到其父窗口*/
+function wfforward(wfurl){
+	parent.location.href = wfurl;
+}
+
+function myescapecode(str)
+{
+	return encodeURIComponent(str);
+}
+</script>
+
+
+
+
+<script language="JavaScript"> 
+  var companyname = "E8TEST";
+  var str1 = "此系统由泛微软件授权于";
+
+  if(companyname.length >0 ){
+  	window.status = str1+companyname;
+  }
+</script>
+<!-- 删除 -->
+</head><body>
+
+<!--USB 验证 -->
+
+
+<!--WUI -->
+
+<link href="./jquery_dialog_wev8.css" type="text/css" rel="STYLESHEET">
+<script type="text/javascript" src="./jquery.min_wev8.js"></script>
+<script type="text/javascript" language="javascript" src="./jquery_dialog_wev8.js"></script>
+<script type="text/javascript" language="javascript">
+function ReloadOpenerByDialogClose() {
+    document.location="/login/VerifyRtxLogin.jsp?para=309E8BC1C22704EC492584DB74590E0F46935E31BF5D9843615D29FFD937E2D65A0A8FDCF036954FA28CA24C228A27AED38363A2C13A73A0A139A6A7C41BCC1C2463E5724171626CACE9623B91F01D11F47EB147625C1A043D8E590B8ACBF3C60810E1E171FCB14F6962248F137150E3";
+        return;
+
+
+}
+</script>
+
+
+
+<!--For wui-->
+
+
+<!--For wui-->
+<link type="text/css" rel="stylesheet" href="./wui_wev8.css">
+
+<!-- 字体设置，win7、vista系统使用雅黑字体,其他系统使用宋体 Start -->
+<!--
+添加至init_wev8.css 
+<link type='text/css' rel='stylesheet'  href='/wui/common/css/w7OVFont_wev8.css' id="FONT2SYSTEMF">
+ -->
+<script language="javascript"> 
+/*
+if (jQuery.client.version< 6) {
+	document.getElementById('FONT2SYSTEMF').href = "/wui/common/css/notW7AVFont_wev8.css";
+}
+*/
+</script> 
+<!-- 字体设置，win7、vista系统使用雅黑字体,其他系统使用宋体 End -->
+
+<!-- 页面切换效果Start -->
+
+<!-- 页面切换效果End -->
+
+
+<script language="javascript">
+
+//------------------------------
+// the folder of current skins 
+//------------------------------
+//当前使用的主题
+var GLOBAL_CURRENT_THEME = "ecology8";
+//当前主题使用的皮肤
+var GLOBAL_SKINS_FOLDER = "default";
+</script>
+
+<!--For wuiForm-->
+<script type="text/javascript" src="./jquery.wuiform_wev8.js"></script>
+<script language="javascript">
+jQuery(document).ready(function(){
+	wuiform.init();
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="./Weaver_wev8.css" type="text/css" rel="STYLESHEET">
+<link href="./rp_wev8.css" rel="STYLESHEET" type="text/css">
+
+<script language="JavaScript" src="./weaver_wev8.js"></script>
+<script type="text/javascript" src="./MsgUtil.js"></script>
+<script type="text/javascript" src="./engine.js"></script>
+<script type="text/javascript" src="./util.js"></script>
+
+<style type="text/css">
+<!--
+BODY {
+	FONT-SIZE: 9pt; MARGIN: 0px; FONT-FAMILY: Verdana; LIST-STYLE-TYPE: circle; scrollbar-base-color:#FFFFCC; scrollbar-face-color:#d6d3ce; SCROLLBAR-HIGHLIGHT-COLOR: #f5f9ff; SCROLLBAR-SHADOW-COLOR: #D6D3D6; SCROLLBAR-3DLIGHT-COLOR: #D6D3D6; SCROLLBAR-ARROW-COLOR: #797979; SCROLLBAR-TRACK-COLOR: #EFF3F7; SCROLLBAR-DARKSHADOW-COLOR: #ffffff ; BACKGROUND-COLOR:#D9D9D9
+}
+-->
+</style>
+
+ 
+ <script language="JavaScript">
+ 
+function CLASS_MSN_MESSAGE(id,width,height,caption,title,message,target,action){  
+    this.id     = id;  
+    this.title  = title;  
+    this.caption= caption;  
+    this.message= message;  
+    this.target = target;  
+    this.action = action;  
+    this.width    = width?width:200;  
+    this.height = height?height:120;  
+    this.timeout= 150;  
+    this.speed    = 20; 
+    this.step    = 1; 
+    this.right    = screen.width -1;  
+    this.bottom = screen.height; 
+    this.left    = this.right - this.width; 
+    this.top    = this.bottom - this.height; 
+    this.timer    = 0; 
+    this.pause    = false;
+    this.close    = false;
+    this.autoHide    = true;
+    this.url    = "";
+    this.liststr  = "";
+}  
+  
+
+ //隐藏消息方法  
+  
+CLASS_MSN_MESSAGE.prototype.hide = function(){  
+    if(this.onunload()){  
+
+        var offset  = this.height>this.bottom-this.top?this.height:this.bottom-this.top; 
+        var me  = this;  
+ 
+        if(this.timer>0){   
+            window.clearInterval(me.timer);  
+        }  
+ 
+        var fun = function(){  
+            if(me.pause==false||me.close){
+                var x  = me.left; 
+                var y  = 0; 
+                var width = me.width; 
+                var height = 0; 
+                if(me.offset>0){ 
+                    height = me.offset; 
+                } 
+     
+                y  = me.bottom - height; 
+     
+                if(y>=me.bottom){ 
+                    window.clearInterval(me.timer);  
+                    me.Pop.hide();  
+                } else { 
+                    me.offset = me.offset - me.step;  
+                } 
+                me.Pop.show(x,y,width,height);    
+            }             
+        }  
+ 
+        this.timer = window.setInterval(fun,this.speed)      
+    }  
+}  
+  
+ 
+//    消息卸载事件，可以重写  
+ 
+CLASS_MSN_MESSAGE.prototype.onunload = function() {  
+    return true;  
+}  
+
+ //  消息命令事件，要实现自己的连接，请重写它  
+
+
+CLASS_MSN_MESSAGE.prototype.oncommand = function(url){  
+    //this.close = true;
+    //this.hide();  
+   window.open(url);
+}  
+  
+  
+//   消息显示方法  
+
+CLASS_MSN_MESSAGE.prototype.show = function(){  
+  try{
+    var oPopup = window.createPopup(); //IE5.5+  
+    
+    this.Pop = oPopup;  
+    var link = this.url;
+    var w = this.width;  
+    var h = this.height;
+    var dealLabel = "我要处理";
+  
+    
+    var str = "<DIV  WIDTH: " + w + "px; BORDER-BOTTOM: #455690 1px solid; POSITION: absolute; TOP: 0px; HEIGHT: " + h + "px; BACKGROUND-COLOR: #c9d3f3'>"  
+    //str += "<TABLE style='BORDER-TOP: #ffffff 1px solid; BORDER-LEFT: #ffffff 1px solid' cellSpacing=0 cellPadding=0 width='100%' bgColor=#cfdef4 border=0 >"  
+    str += "<table width='100%' border='0' cellspacing='0' cellpadding='0' background='/images/PopupBg_wev8.jpg' height='135'>"
+       
+    str += "<TR>"
+    str += "<td  height='5'><img src='/images/PopupTop_wev8.jpg' width='210' height='5'></td>"
+    str += "</TR>"  
+    
+   
+    str += "<TR>"
+    str += "<th background='/images/PopupTitleBg_wev8.jpg' height='26' >"
+    str += "<TABLE width='100%' border='0' cellspacing='0' cellpadding='0' style='FONT-SIZE: 9pt; MARGIN: 0px; FONT-FAMILY: Verdana'>"
+    str += "<TR>"
+        
+    str += "<td width='18'></td>"
+    str += "<td width='20'><img src='/images/PopupDot_wev8.gif'></td>"
+    str += "<th valign='bottom' align='left' >" + this.caption + "</th>"
+    str += "<TD style='PADDING-RIGHT: 2px; PADDING-TOP: 2px' vAlign=center align=right width=19>"  
+    str += "<SPAN  style='FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: red; MARGIN-RIGHT: 4px' id='btSysClose' ><img src='/images/PopupClose_wev8.gif' alt='关闭' border='0'>&nbsp;&nbsp;&nbsp;</SPAN></TD>"  
+    
+    
+    str += "</TR>"  
+    str += "</TABLE>"  
+    str += "</th>"
+    str += "</TR>"  
+    
+    str += "<TR>"  
+    str += "<TD valign='top' style='PADDING-RIGHT: 1px;PADDING-BOTTOM: 1px' colSpan=3 height=" + (h-29) + ">"
+    str += "<DIV style=' PADDING-RIGHT: 8px;  PADDING-LEFT: 8px; FONT-SIZE: 9pt; FONT-FAMILY: Verdana; PADDING-BOTTOM: 8px;  WIDTH: 100%;  PADDING-TOP: 8px; '>&nbsp;" + this.title + "<BR><BR>"  
+    //str += "<DIV style='WORD-BREAK: break-all' align=left><A href='javascript:void(0)' hidefocus=true id='btCommand'><FONT color=#ff0000>" + this.message + "</FONT></A></DIV>"
+    
+    str += "<TABLE width='100%' border='0' cellspacing='0' cellpadding='0' style='FONT-SIZE: 9pt; MARGIN: 0px; FONT-FAMILY: Verdana'>"
+    str += this.message;
+
+    //str += "<tr><td><br><img src='/images/bwbullet_wev8.gif'></td><td><br><a id='sysRemindInfo' href='#'>&nbsp" + dealLabel + "</a></td></tr>";
+
+    str += "</TABLE>"    
+    
+    str += "</DIV>"  
+    str += "</TD>"  
+    str += "</TR>" 
+                  
+    str += "<TR>"
+    str += "<td  height='15'><img src='/images/PopupBottom_wev8.jpg' width='210'></td>"
+    str += "</TR>"
+     
+    str += "</TABLE>"  
+    str += "</DIV>"  
+    
+    oPopup.document.body.innerHTML = str; 
+    
+  
+    this.offset  = 0; 
+    var me  = this;  
+
+    oPopup.document.body.onmouseover = function(){me.pause=true;}
+    oPopup.document.body.onmouseout = function(){me.pause=false;}
+
+    var fun = function(){  
+        var x  = me.left; 
+        var y  = 0; 
+        var width    = me.width; 
+        var height    = me.height; 
+ 
+            if(me.offset>me.height){ 
+                height = me.height; 
+            } else { 
+                height = me.offset; 
+            } 
+ 
+        y  = me.bottom - me.offset; 
+        if(y<=me.top){ 
+            me.timeout--; 
+            if(me.timeout==0){ 
+                window.clearInterval(me.timer);  
+                if(me.autoHide){
+                    me.hide(); 
+                }
+            } 
+        } else { 
+            me.offset = me.offset + me.step; 
+        } 
+        me.Pop.show(x,y,width,height+17);    
+ 
+    }  
+  
+    this.timer = window.setInterval(fun,this.speed)      
+  
+       
+    var btClose = oPopup.document.getElementById("btSysClose");  
+  
+    btClose.onclick = function(){  
+        me.close = true;
+        me.hide();  
+    }
+    
+    var sysRemindInfo = oPopup.document.getElementById("sysRemindInfo");
+    
+    if (sysRemindInfo != null && sysRemindInfo != undefined) {
+    	sysRemindInfo.onclick = function(){
+    		openFullWindow("sysremind/SysRemindInfoFrame.jsp");
+    	}
+    }
+    
+    var messagerTips = oPopup.document.getElementById("messagerTips");
+    
+    if (messagerTips != null && messagerTips != undefined) {
+    	messagerTips.onclick = function(){
+    		window.parent.doShowAllTempMsg();
+    	}
+    }
+    
+    //var btCommand = oPopup.document.getElementById("btCommand");  
+    //btCommand.onclick = function(){  
+      
+        //me.oncommand(link);  
+    //}
+   }catch(e){}     
+}  
+
+// 设置速度方法 
+
+CLASS_MSN_MESSAGE.prototype.speed = function(s){ 
+    var t = 20; 
+    try { 
+        t = praseInt(s); 
+    } catch(e){} 
+    this.speed = t; 
+} 
+
+
+//设置步长方法 
+ 
+CLASS_MSN_MESSAGE.prototype.step = function(s){ 
+    var t = 1; 
+    try { 
+        t = praseInt(s); 
+    } catch(e){} 
+    this.step = t; 
+} 
+  
+CLASS_MSN_MESSAGE.prototype.rect = function(left,right,top,bottom){ 
+    try { 
+        this.left        = left    !=null?left:this.right-this.width; 
+        this.right        = right    !=null?right:this.left +this.width; 
+        this.bottom        = bottom!=null?(bottom>screen.height?screen.height:bottom):screen.height; 
+        this.top        = top    !=null?top:this.bottom - this.height; 
+    } catch(e){} 
+} 
+</script> 
+ 
+ 
+<script language="javascript">
+lightstatus2 = "off";
+
+img1click = "off";
+img2click = "off";
+img3click = "off";
+img4click = "off";
+
+var count =5;
+
+function handlenewrequest(str) {
+
+    var height = 120 + count * 17;
+
+    var MSG1 = new CLASS_MSN_MESSAGE("aa",210,height,"消息提醒","消息提醒",str,"","");  
+    MSG1.rect(null,null,null,screen.height-60); 
+    MSG1.speed    = 30; 
+    MSG1.step    = 10; 
+    //alert(MSG1.top);
+    //MSG1.url = "http://www.google.com";
+    //MSG1.liststr = str;
+    MSG1.show();
+    
+}
+
+function setPoppupHeight(num) {
+    count = num * 1 + 1;
+}
+
+function turnlighton(index, status) {
+    switch (index) {
+        case 1: if (status == "on") {
+            img1.src = "/images_frame/dh/img1_wev8.gif";
+            img1.style.cursor = "hand";
+            img1click = "on";
+        } else {
+            img1.src = "/images_frame/dh/img1-2_wev8.gif";
+            img1.style.cursor = "text";
+            img1click = "off";
+        }
+        break;
+        case 2: if (status == "on") {
+            img2.src = "/images_frame/dh/img2_wev8.gif";
+            img2.style.cursor = "hand";
+            lightstatus2 = "on";
+            img2click = "on";
+        } else {
+            img2.src = "/images_frame/dh/img2-2_wev8.gif";
+            img2.style.cursor = "text";
+            lightstatus2 = "off";
+            img2click = "off";
+        }
+        break;
+        case 3: if (status == "on") {
+            img3.src = "/images_frame/dh/img3_wev8.gif";
+            img3.style.cursor = "hand";
+            img3click = "on";
+        } else {
+            img3.src = "/images_frame/dh/img3-2_wev8.gif";
+            img3.style.cursor = "text";
+            img3click = "off";
+        }
+        break;
+        case 4: if (status == "on") {
+            img4.src = "/images_frame/dh/img4_wev8.gif";
+            img4.style.cursor = "hand";
+            img4click = "on";
+        } else {
+            img4.src = "/images_frame/dh/img4-2_wev8.gif";
+            img4.style.cursor = "text";
+            img4click = "off";
+        }
+        break;
+        default:
+    }
+}
+
+function doPopup(o){
+     /*if(!o==""){
+         setPoppupHeight(o.substring(0,o.indexOf(",")));
+         handlenewrequest(o.substring(o.indexOf(",")+1)) ;
+     }*/
+	 try{
+	 	parent.updateRemindInfo()
+	 }catch(e){}
+}
+ 
+function send(){
+  try{
+    MsgUtil.getPopupMsg(4,0,7,doPopup)
+  }catch(e){}  
+}
+
+doPopup();
+
+window.setInterval("doPopup()", 3 * 60 * 1000);
+
+</script>
+
+<div style="left:0;top:0;height:18;width:90"> 
+    <img id="img1" src="./img1-2_wev8.gif" onclick="" title="客户联系计划">
+    <img id="img2" src="./img2-2_wev8.gif" onclick="" title="工作流到达">
+    <img id="img3" src="./img3-2_wev8.gif" onclick="" title="工作流完成">
+    <img id="img4" src="./img4-2_wev8.gif" onclick="" title="节点超时">
+</div>
+
+
+
+</body></html>

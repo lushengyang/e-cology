@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://live.weaver.com.cn/website/idx/enterStudio -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>泛微直播室</title>
+  
+  <!-- <meta http-equiv="Content-Type" content="text/html; charset=GB2312"> -->
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <script src="./jquery-1.8.2.min.js"></script>
+  <!-- 全局样式 -->
+  <link href="./css.css" rel="stylesheet" type="text/css">
+  <link href="./page.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+ img{width:100%;height:140px;}
+.cdirect{background-color: #e01919;color:#fff;position:absolute;top:0;left:22px;overflow:hidden;padding:6px 8px 6px 8px;font-size:9px;}
+.cforeshow{background-color:#1190ea;color:#fff;position:absolute;top:0;left:22px;overflow:hidden;padding:6px 8px 6px 8px;font-size:9px;}
+.cbeigintime{width: 100%;background-color: rgba(0,0,0,.45);color: #fff;position: absolute;bottom: 0;left: 0;line-height: 24px;text-indent: 12px;overflow: hidden;font-size: 9px;}
+.ctext{text-overflow:ellipsis; white-space:nowrap; word-break:keep-all;overflow:hidden;}
+.padiv{padding:3px 0 2px 0;font-size: 14px;margin: 0 10px 0 10px;}
+.cspan1{color:#999;font-size: 12px;}
+.cspan2{padding:0 8px 0 4px;font-size: 12px;}
+.ent_btn{padding: 5px 0 5px 0;display:block; background-color: #dddddd;text-align: center;margin:5px 10px 8px 10px;font-size: 14px;font-weight: bold;}
+.ent_btn:hover{background-color: #999999;}
+a:link{color: #000000;text-decoration:none;}
+a:visited{color: #000000;text-decoration:none;}
+a:hover{color: #000000;text-decoration:none;} 
+a:active{color: #000000;text-decoration:none;}
+.ent_line{border-bottom: 1px solid #dddddd;height:0;margin:0 10px 0 10px;}
+.ent_title{font-size: 14px;font-weight: bold;margin: 0 10px 0 10px;}
+.ent_listimg{min-height: 1px;overflow: hidden;position: relative;margin: 3px 10px 0 10px;}
+  </style>
+</head>
+
+<body>
+  <div class="boxPD" style="overflow-y: auto;">
+        <a href="javaScript:void(0);" onclick="openLive()" class="ent_btn">进入直播室首页</a>
+        <div class="ent_line"></div>
+        <div class="newBOX" style="margin-top: 6px;">
+			<div> 
+					   <div>
+						   <div class="ctext ent_title">
+						       <a href="javaScript:void(0);" onclick="openLive(&#39;b46e2b991fe942768f9c459fd29df813&#39;)">泛微移动办公OA快速体验</a>
+						   </div>
+					     <div style="margin-top:-2px;">
+			                <div class="ctext padiv">
+						        <span class="cspan1"> e-cology</span>
+								<span class="cspan2">|</span><span class="cspan1">e-cology体验</span>
+							</div>
+					      </div>
+					   </div>   
+					   <div style="position:relative;width:100%;">
+						   <div class="ent_listimg">
+						        <a href="javaScript:void(0);" onclick="openLive(&#39;b46e2b991fe942768f9c459fd29df813&#39;)">
+							              <img src="./30b16a54939347f382edb587741bfaec">
+						         </a>
+						         <div class="cbeigintime">2017-12-05</div>
+						   </div>
+					           <div class="cforeshow">预告</div>
+					   </div>
+	      </div>
+		</div>
+  </div>
+  <iframe id="statframe" src="" style="display:none;"></iframe>
+  <script type="text/javascript">
+  	function openLive(playid){
+  		var url = "/website/idx?kw=2";
+  		if(typeof(playid)!="undefined" && playid != null) url = "/website/idx/playIdex?id="+playid+"&kw=2";
+		$("#statframe").attr("src","http://www.weaver.com.cn/subpage/util/savelog.asp?accesstype=15");
+		window.open(url);
+	}
+  </script>
+
+</body></html>

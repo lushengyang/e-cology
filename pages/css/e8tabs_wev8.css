@@ -1,0 +1,49 @@
+/* box */
+.box {
+	height: 100%;
+	width:100%;
+	background: #fff;
+}
+.p_tab_menu {
+	overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+	border-bottom: 1px solid #D9D9D9;
+    margin-bottom: 10px;
+}
+.p_tab_menu  li {
+	float: left;
+	height: 24px !important;
+	line-height: 24px !important;
+	color: #5F5F5F;
+	text-align: center;
+	cursor: pointer;
+	list-style-type: none;
+	padding-left:8px;
+	padding-right:8px;
+	font-size: 14px;
+}
+.p_tab_menu li.current {
+	color: #1264B5;
+}
+
+.tab_box {
+	height: 100%;
+	width:100%;
+	overflow:hidden; 
+	position:absolute;
+}
+.tab_box .hide {
+	display: none;
+}
+.magic-line {
+	position: absolute;
+	left: 0;
+	height: 2px!important;
+	line-height: 2px!important;
+	margin-top:22px;
+}
+
+.magic-line{
+	top:35px!important;
+}

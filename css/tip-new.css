@@ -1,0 +1,128 @@
+.coverDiv {
+	height: 100%;
+	position: absolute;
+	z-index: 10000;
+	background: rgba(213, 213, 213, 0.4);
+	top: 0px;
+	left: 0px;
+	
+}
+.coverMsg {
+	background: #D0DBFE;
+	z-index: 10001;
+	position: absolute;
+	top: 296px;
+	padding: 10px 10px 10px 10px;
+	min-width: 120px;
+	border: 2px solid #fff;
+	border-radius: 5px;
+	font-size: 15px;
+}
+.coverMsg a {
+	cursor: pointer;
+	color: #3E60EC;
+	font-size: 12px;
+}
+.coverMsgDiv {
+  	margin-bottom: 15px;
+	font-size: 15px;
+}
+.coverNext,.coverPrev{
+	float:left;
+	margin-right: 5px;
+	
+}
+.coverClose{
+	float:right;
+}
+.coverMsgDiv span {
+    font-size: 15px;
+}
+/**右侧引导按钮**/
+.coverbar {
+    right: 90px;
+    position: fixed;
+    bottom: 100px;
+    width: 80px;
+    height: 80px;
+    background: #3C78D8;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50%;
+    line-height: 80px;
+	font-size: 14px;
+}
+.coverbar-hover{
+	background: #115CD6;
+}
+/**右侧引导按钮**/
+/**右侧引导按钮（新）**/
+.tip_home {
+	width: 120px;
+	height: 120px;
+	background: url('1.png') no-repeat;
+	right: 90px;
+    position: fixed;
+    bottom: 100px;
+	cursor: pointer;
+	z-index: 10001;
+}
+.tip_home svg{
+	z-index: 1;
+}
+.tip_home_img{
+	position:absolute;
+	height:100%;
+	width:100%;
+	top: 0;
+	z-index: 0;
+}
+.u1 {
+	background: url('u1.png') no-repeat;
+}
+.r1 {
+	background: url('r1.png') no-repeat;
+}
+.d1 {
+	background: url('d1.png') no-repeat;
+}
+.l1 {
+	background: url('l1.png') no-repeat;
+}
+/**右侧引导按钮（新）**/
+/**菜单样式**/
+.tip_menu{
+    position: absolute;
+    background: #316EB6;
+    color: #fff;
+    line-height: 20px;
+    padding: 10px 5px 10px 0;
+    bottom: 122px;
+    width: 120px;
+    max-height: 200px;
+    border-radius: 5px;
+    display: none;
+	
+}
+.tip_menu ul{
+	margin-left: 10px;
+	display: none;
+	
+}
+.tip_menu li {
+    list-style-type: none;
+	
+}
+.tip_menu li span {
+	display: inherit;
+	padding: 0 3px;
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+	
+}
+.spanHover,.spanSelect {
+    background: #0477FF;
+}
+/**菜单样式**/
